@@ -175,8 +175,9 @@ if __name__ == '__main__':
     print('Finished training')
 
     print('Saving')
+    save_path = './data/'
     name = f'_nodes{nodes}_layers_{layers}'
-    torch.save(model_trained.state_dict(), "model" + name + ".pth")
+    torch.save(model_trained.state_dict(), save_path + "model" + name + ".pth")
 
     data = {
         "result" : {
@@ -196,7 +197,7 @@ if __name__ == '__main__':
             "seed" : seed
         },
     }
-    with open("data" + name + ".json", "w") as f:
+    with open(save_path + "data" + name + ".json", "w") as f:
         json.dump(data, f)
     print('Done!')
 
