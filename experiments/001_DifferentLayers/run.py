@@ -141,9 +141,11 @@ def generate_layers(nodes, layers):
     return [nodes for i in range(layers)]
 
 if __name__ == '__main__.py':
+    print('Parsing args')
     args = parse_args()
     nodes = args.nodes
     layers = args.layers
+    print('Finish parsing args')
     
     # Parameters
     layer_width = generate_layers(nodes, layers)
@@ -156,8 +158,11 @@ if __name__ == '__main__.py':
     seed = 123
     
     # Run simulation
+    print('Initalizing model')
     model = MLP(layer_width)
+    print('Finish initalizing model')
 
+    print('Training')
     model_trained, accuracy_train, accuracy_test = train_mnist_model(
                       model = model,
                       epochs = epochs,
@@ -167,6 +172,9 @@ if __name__ == '__main__.py':
                       tolerance = tolerance,
                       seed = seed
         )
+    print('Finished training')
+
+    print('Saving')
     name = f'_nodes{nodes}_layers_{layers}'
     torch.save(model_trained.state_dict(), "model" + name + ".pth")
 
@@ -190,4 +198,5 @@ if __name__ == '__main__.py':
     }
     with open("data_" + name + ".json", "w") as f:
         json.dump(data, f)
+    print('Done!')
 
