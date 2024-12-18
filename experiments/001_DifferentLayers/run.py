@@ -62,9 +62,8 @@ def train_mnist_model(model,
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     
     # Early stopping 
-    best_loss = float('inf')
-    epochs_no_improve = 0
-
+    best_val_loss = float('inf')
+    counter = 0
     # Training loop
     for epoch in range(epochs):
         model.train()
@@ -103,15 +102,17 @@ def train_mnist_model(model,
         val_loss /= len(test_loader)
         print(f"Epoch [{epoch+1}/{epochs}], Validation Loss: {val_loss:.4f}")
 
-        # Is validaiton loss enough to stop?
-        if val_loss < best_val_loss:
+        # Early stopping logic with tolerance
+        improvement = best_val_loss - val_loss
+        if improvement > tolerance:  # Improvement must exceed tolerance
             best_val_loss = val_loss
             counter = 0
             # Save the best model
             torch.save(model.state_dict(), 'best_model.pth')
+            print(f"Validation loss improved by {improvement:.6f}. Model saved.")
         else:
             counter += 1
-            print(f"Early stopping counter: {counter}/{patience}")
+            print(f"Early stopping counter: {counter}/{patience} (Improvement: {improvement:.6f})")
             if counter >= patience:
                 print("Early stopping triggered. Stopping training.")
                 break
