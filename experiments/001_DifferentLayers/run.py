@@ -180,8 +180,8 @@ if __name__ == '__main__':
 
     data = {
         "result" : {
-            "accuracy_train" : accuracy_train, 
-            "accuracy_test": accuracy_test,
+            "accuracy_train_pct" : accuracy_train, 
+            "accuracy_test_pct": accuracy_test,
         },
         "model" : {
             "nodes" : nodes,
@@ -196,7 +196,7 @@ if __name__ == '__main__':
             "seed" : seed
         },
     }
-    with open("data_" + name + ".json", "w") as f:
+    with open("data" + name + ".json", "w") as f:
         json.dump(data, f)
     print('Done!')
 
