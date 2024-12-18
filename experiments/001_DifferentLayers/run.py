@@ -88,17 +88,17 @@ def train_mnist_model(model,
             avg_loss = running_loss / len(train_loader)
             print(f"Epoch [{epoch+1}/{epochs}], Training Loss: {avg_loss:.4f}")
 
-            # Early stopping logic
-            if best_loss - avg_loss > tolerance:
-                best_loss = avg_loss
-                epochs_no_improve = 0
-            else:
-                epochs_no_improve += 1
-                print(f"No improvement in loss for {epochs_no_improve} epoch(s).")
+        # Early stopping logic
+        if best_loss - avg_loss > tolerance:
+            best_loss = avg_loss
+            epochs_no_improve = 0
+        else:
+            epochs_no_improve += 1
+            print(f"No improvement in loss for {epochs_no_improve} epoch(s).")
 
-            if epochs_no_improve >= patience:
-                print(f"Early stopping triggered. No improvement for {patience} consecutive epochs.")
-                break
+        if epochs_no_improve >= patience:
+            print(f"Early stopping triggered. No improvement for {patience} consecutive epochs.")
+            break
 
     ### Evaluation
     model.eval()
