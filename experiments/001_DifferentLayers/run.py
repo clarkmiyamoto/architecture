@@ -84,23 +84,39 @@ def train_mnist_model(model,
 
             running_loss += loss.item()
 
-            # Calculate average epoch loss
-            avg_loss = running_loss / len(train_loader)
-            print(f"Epoch [{epoch+1}/{epochs}], Training Loss: {avg_loss:.4f}")
+        # Calculate average epoch loss
+        avg_loss = running_loss / len(train_loader)
+        print(f"Epoch [{epoch+1}/{epochs}], Training Loss: {avg_loss:.4f}")
 
-        # Early stopping logic
-        if best_loss - avg_loss > tolerance:
-            best_loss = avg_loss
-            epochs_no_improve = 0
+        ### Early Stopping Logic
+        model.eval()
+
+        # Validation loss
+        val_loss = 0.0
+        with torch.no_grad():
+            for images, labels in val_loader:
+                images, labels = images.to(device), labels.to(device)
+                outputs = model(images)
+                loss = criterion(outputs, labels)
+                val_loss += loss.item()
+
+        val_loss /= len(val_loader)
+        print(f"Epoch [{epoch+1}/{epochs}], Validation Loss: {val_loss:.4f}")
+
+        # Is validaiton loss enough to stop?
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            counter = 0
+            # Save the best model
+            torch.save(model.state_dict(), 'best_model.pth')
         else:
-            epochs_no_improve += 1
-            print(f"No improvement in loss for {epochs_no_improve} epoch(s).")
+            counter += 1
+            print(f"Early stopping counter: {counter}/{patience}")
+            if counter >= patience:
+                print("Early stopping triggered. Stopping training.")
+                break
 
-        if epochs_no_improve >= patience:
-            print(f"Early stopping triggered. No improvement for {patience} consecutive epochs.")
-            break
-
-    ### Evaluation
+    ### Final Evaluation
     model.eval()
 
     correct = 0
@@ -149,11 +165,11 @@ if __name__ == '__main__':
     
     # Parameters
     layer_width = generate_layers(nodes, layers)
-    epochs = 24
+    epochs = 50
     batch_size = 8
-    learning_rate = 0.001
-    patience = 5
-    tolerance = 1e-4
+    learning_rate = 1e-3
+    patience = 3
+    tolerance = 1e-2 # Should be an order higher than learning rate
 
     seed = 123
     
