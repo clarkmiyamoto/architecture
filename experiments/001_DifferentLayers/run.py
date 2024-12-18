@@ -140,7 +140,7 @@ def parse_args():
 def generate_layers(nodes, layers):
     return [nodes for i in range(layers)]
 
-if __name__ == '__main__.py':
+if __name__ == '__main__':
     print('Parsing args')
     args = parse_args()
     nodes = args.nodes
