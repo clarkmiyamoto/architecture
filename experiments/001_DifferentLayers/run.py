@@ -94,13 +94,13 @@ def train_mnist_model(model,
         # Validation loss
         val_loss = 0.0
         with torch.no_grad():
-            for images, labels in val_loader:
+            for images, labels in test_loader:
                 images, labels = images.to(device), labels.to(device)
                 outputs = model(images)
                 loss = criterion(outputs, labels)
                 val_loss += loss.item()
 
-        val_loss /= len(val_loader)
+        val_loss /= len(test_loader)
         print(f"Epoch [{epoch+1}/{epochs}], Validation Loss: {val_loss:.4f}")
 
         # Is validaiton loss enough to stop?
